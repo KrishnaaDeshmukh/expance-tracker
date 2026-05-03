@@ -18,22 +18,37 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:5173',
   'https://expance-tracker-frontend-7gsk64oei.vercel.app',
+  'https://expance-tracker-frontend-iota.vercel.app',
   ...(process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',').map((origin) => origin.trim()).filter(Boolean) : []),
 ];
 
+const allowedOriginPatterns = [
+  /^https:\/\/expance-tracker-frontend(?:-[a-z0-9-]+)?\.vercel\.app$/i,
+];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin) {
+      callback(null, true);
+      return;
+    }
+
+    if (allowedOrigins.includes(origin) || allowedOriginPatterns.some((pattern) => pattern.test(origin))) {
+      callback(null, true);
+      return;
+    }
+
+    callback(new Error(`Not allowed by CORS: ${origin}`));
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 204,
+};
+
 app.use(helmet());
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-        return;
-      }
-      callback(new Error('Not allowed by CORS'));
-    },
-    credentials: true,
-  })
-);
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json());
 app.use(morgan('dev'));
 
