@@ -77,8 +77,11 @@ const updateSettings = async ({ dailyLimit, balance }) => {
 
 const createExpense = async ({ amount, category, description = '', date }) => {
   const settings = await ensureSettingsRow();
+  // normalize amount to two decimal places to avoid floating precision issues
+  const amountValue = Number(Number(amount).toFixed(2));
+
   const payload = {
-    amount: Number(amount),
+    amount: amountValue,
     category,
     description,
     date: toLocalDateString(date),
@@ -90,7 +93,9 @@ const createExpense = async ({ amount, category, description = '', date }) => {
     throw error;
   }
 
-  const nextBalance = Number(settings.balance || 0) - Number(payload.amount);
+  // update balance with fixed two-decimal precision
+  const currentBalance = Number(settings.balance || 0);
+  const nextBalance = Number((currentBalance - amountValue).toFixed(2));
   const nextSettings = await updateSettings({ balance: nextBalance, dailyLimit: settings.dailyLimit });
 
   return {
