@@ -25,6 +25,10 @@ app.use(
 app.use(express.json());
 app.use(morgan('dev'));
 
+app.get('/', (_req, res) => {
+  res.send('API is running \uD83D\uDE80');
+});
+
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', message: 'Finance tracker API is running' });
 });

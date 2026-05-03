@@ -4,16 +4,25 @@ require('dotenv').config({ path: path.join(__dirname, '..', '..', '.env') });
 const supabase = require('../config/supabase');
 
 async function clearTable(table) {
-  const { error } = await supabase.from(table).delete().neq('id', 0);
+  const { error } = await supabase.from(table).delete().gte('id', 1);
   if (error) {
+    if (error.message.includes("Could not find the table")) {
+      console.log(`Skipped ${table}: table does not exist yet`);
+      return;
+    }
     throw new Error(`Failed to clear ${table}: ${error.message}`);
   }
 }
 
 async function resetSettings() {
-  const { error } = await supabase
-    .from('settings')
-    .upsert({ id: 1, daily_limit: 0, balance: 0, monthly_savings_goal: 0 }, { onConflict: 'id' });
+  const primaryPayload = { id: 1, daily_limit: 0, balance: 0, monthly_savings_goal: 0 };
+  const fallbackPayload = { id: 1, daily_limit: 0, balance: 0 };
+
+  let { error } = await supabase.from('settings').upsert(primaryPayload, { onConflict: 'id' });
+
+  if (error && error.message.includes("monthly_savings_goal")) {
+    ({ error } = await supabase.from('settings').upsert(fallbackPayload, { onConflict: 'id' }));
+  }
 
   if (error) {
     throw new Error(`Failed to reset settings: ${error.message}`);
@@ -32,9 +41,8 @@ async function clearDb() {
 clearDb()
   .then(() => {
     console.log('Database cleared successfully');
-    process.exit(0);
   })
   .catch((error) => {
     console.error(error.message);
-    process.exit(1);
+    process.exitCode = 1;
   });
