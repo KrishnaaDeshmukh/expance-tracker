@@ -38,7 +38,7 @@ function App() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const summaryResponse = await client.get('/summary');
+      const summaryResponse = await client.get('/api/summary');
 
       setSummary(summaryResponse.data);
     } catch (error) {

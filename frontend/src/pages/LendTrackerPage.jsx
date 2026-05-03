@@ -16,8 +16,8 @@ const LendTrackerPage = ({ onLendUpdated }) => {
     setLoading(true);
     try {
       const [entriesResponse, statsResponse] = await Promise.all([
-        client.get('/lend'),
-        client.get('/lend/summary'),
+        client.get('/api/lend'),
+        client.get('/api/lend/summary'),
       ]);
 
       setEntries(entriesResponse.data.data || []);
@@ -43,7 +43,7 @@ const LendTrackerPage = ({ onLendUpdated }) => {
 
   const handleMarkReturned = async (entry) => {
     try {
-      await client.patch(`/lend/${entry._id || entry.id}`);
+      await client.patch(`/api/lend/${entry._id || entry.id}`);
       setMessage('Marked as returned');
       setMessageType('success');
       await loadLendData();

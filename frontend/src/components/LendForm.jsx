@@ -35,7 +35,7 @@ const LendForm = ({ onLendCreated }) => {
         throw new Error('Amount must be greater than 0');
       }
 
-      const response = await client.post('/lend', {
+      const response = await client.post('/api/lend', {
         personName: formData.personName.trim(),
         amount: parsedAmount,
         date: formData.date,

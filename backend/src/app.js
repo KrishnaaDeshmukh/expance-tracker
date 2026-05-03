@@ -15,10 +15,22 @@ const savingsRoutes = require('./routes/savingsRoutes');
 
 const app = express();
 
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://expance-tracker-frontend-7gsk64oei.vercel.app',
+  ...(process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',').map((origin) => origin.trim()).filter(Boolean) : []),
+];
+
 app.use(helmet());
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || '*',
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(new Error('Not allowed by CORS'));
+    },
     credentials: true,
   })
 );

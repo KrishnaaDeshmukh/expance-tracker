@@ -47,7 +47,7 @@ const SavingsForm = ({ onSavingsEntryCreated }) => {
         throw new Error('Date is required');
       }
 
-      const response = await client.post('/savings', {
+      const response = await client.post('/api/savings', {
         amount: parseFloat(formData.amount),
         type: formData.type,
         date: formData.date,

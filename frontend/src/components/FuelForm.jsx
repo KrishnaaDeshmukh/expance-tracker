@@ -33,7 +33,7 @@ function FuelForm({ onFuelEntryCreated }) {
         date: form.date,
       };
 
-      const response = await client.post('/fuel', payload);
+      const response = await client.post('/api/fuel', payload);
       onFuelEntryCreated?.({
         ...response.data,
         message: 'Fuel entry added successfully',

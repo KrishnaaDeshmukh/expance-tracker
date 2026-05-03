@@ -33,7 +33,7 @@ const GoalSetter = ({ currentGoal, onGoalUpdated }) => {
 
       setLoading(true);
 
-      await client.post('/savings/goal', {
+      await client.post('/api/savings/goal', {
         goal: parseFloat(goal),
       });
 

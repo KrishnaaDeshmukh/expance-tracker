@@ -42,9 +42,9 @@ const SavingsTrackerPage = () => {
     try {
       setLoading(true);
       const [entriesRes, statsRes, monthlyRes] = await Promise.all([
-        client.get('/savings?limit=10'),
-        client.get('/savings/summary'),
-        client.get('/savings/monthly'),
+        client.get('/api/savings?limit=10'),
+        client.get('/api/savings/summary'),
+        client.get('/api/savings/monthly'),
       ]);
 
       setSavingsEntries(entriesRes.data.data || entriesRes.data.entries || []);
@@ -61,11 +61,11 @@ const SavingsTrackerPage = () => {
 
   const loadSpendingData = async () => {
     try {
-      const response = await client.get('/summary');
+      const response = await client.get('/api/summary');
       const today = new Date().toISOString().split('T')[0];
       
       // Get today's spending
-      const todayResponse = await client.get(`/expenses?date=${today}`);
+      const todayResponse = await client.get(`/api/expenses?date=${today}`);
       const todayExpenses = todayResponse.data.expenses || todayResponse.data.data || [];
       const todaysSpending = todayExpenses.reduce(
         (sum, expense) => sum + expense.amount,

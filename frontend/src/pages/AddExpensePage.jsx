@@ -47,7 +47,7 @@ function AddExpensePage({ onExpenseCreated, onSettingsUpdated }) {
     setSavingExpense(true);
 
     try {
-      const response = await client.post('/expenses', {
+      const response = await client.post('/api/expenses', {
         amount: Number(form.amount),
         category: form.category,
         description: form.description,
@@ -76,7 +76,7 @@ function AddExpensePage({ onExpenseCreated, onSettingsUpdated }) {
         payload.balance = Number(settings.initialBalance);
       }
 
-      const response = await client.post('/limit', payload);
+      const response = await client.post('/api/limit', payload);
       onSettingsUpdated?.(response.data);
     } catch (error) {
       setLocalError(error.response?.data?.message || 'Unable to update settings');

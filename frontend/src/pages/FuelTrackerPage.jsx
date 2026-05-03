@@ -17,8 +17,8 @@ function FuelTrackerPage({ onFuelEntryCreated }) {
     setLoading(true);
     try {
       const [entriesResponse, statsResponse] = await Promise.all([
-        client.get('/fuel'),
-        client.get('/fuel/average'),
+        client.get('/api/fuel'),
+        client.get('/api/fuel/average'),
       ]);
 
       setFuelEntries(entriesResponse.data.data || []);

@@ -16,8 +16,8 @@ const IncomeTrackerPage = ({ onIncomeCreated }) => {
     setLoading(true);
     try {
       const [entriesResponse, statsResponse] = await Promise.all([
-        client.get('/income'),
-        client.get('/income/summary'),
+        client.get('/api/income'),
+        client.get('/api/income/summary'),
       ]);
 
       setEntries(entriesResponse.data.data || []);

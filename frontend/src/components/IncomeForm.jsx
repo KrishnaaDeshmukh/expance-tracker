@@ -35,7 +35,7 @@ const IncomeForm = ({ onIncomeCreated }) => {
         throw new Error('Amount must be greater than 0');
       }
 
-      const response = await client.post('/income', {
+      const response = await client.post('/api/income', {
         source: formData.source.trim(),
         amount: parsedAmount,
         date: formData.date,
