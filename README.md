@@ -92,3 +92,4 @@ on conflict (id) do nothing;
 
 - Supabase is required for persistence.
 - Authentication is not enabled in this single-user version, but the structure can be extended with JWT later.
+# ExpanceTracker
